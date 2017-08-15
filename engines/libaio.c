@@ -254,6 +254,11 @@ static int fio_libaio_commit(struct thread_data *td)
 		io_us = ld->io_us + ld->tail;
 		iocbs = ld->iocbs + ld->tail;
 
+                if (iocbs[0]->aio_lio_opcode == 0)
+                        iocbs[0]->u.c.offset += td->total_io_size;
+		#ifdef FIO_TRACE_IO
+		printf("ld->queued = %d, head = %d, tail = %d, opcode = %d, nbytes = %lu, offset = %lld\n", ld->queued, ld->head, ld->tail, iocbs[0]->aio_lio_opcode, iocbs[0]->u.c.nbytes, iocbs[0]->u.c.offset);
+		#endif
 		ret = io_submit(ld->aio_ctx, nr, iocbs);
 		if (ret > 0) {
 			fio_libaio_queued(td, io_us, ret);

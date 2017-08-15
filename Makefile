@@ -36,6 +36,10 @@ ifdef CONFIG_GFIO
   PROGS += gfio
 endif
 
+ifeq ($(TRACE_IO),y)
+  CFLAGS += -DFIO_TRACE_IO
+endif
+
 SOURCE :=	$(patsubst $(SRCDIR)/%,%,$(wildcard $(SRCDIR)/crc/*.c)) \
 		$(patsubst $(SRCDIR)/%,%,$(wildcard $(SRCDIR)/lib/*.c)) \
 		gettime.c ioengines.c init.c stat.c log.c time.c filesetup.c \
